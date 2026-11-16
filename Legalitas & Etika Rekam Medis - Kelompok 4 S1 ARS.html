@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legalitas & Etika Rekam Medis | Kelompok 4 - S1 Administrasi Rumah Sakit</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Merriweather -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Merriweather"', 'serif'],
+                    },
+                    colors: {
+                        medis: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        tealmed: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                        },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom styles for academic typography, subtle background pattern, presentation mode, and print */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .academic-prose {
+            font-family: 'Merriweather', serif;
+            line-height: 1.85;
+        }
+
+        .hero-pattern {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 15% 20%, rgba(5, 150, 105, 0.28) 0px, transparent 50%),
+                radial-gradient(at 85% 80%, rgba(13, 148, 136, 0.25) 0px, transparent 50%),
+                radial-gradient(at 50% 10%, rgba(180, 83, 9, 0.16) 0px, transparent 45%);
+        }
+
+        /* Hide scrollbars cleanly for horizontal mobile pills */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Presentation Mode Enhancements */
+        body.presentation-mode {
+            font-size: 1.125rem;
+            background-color: #f1f5f9;
+        }
+        body.presentation-mode #desktop-sidebar {
+            display: none !important;
+        }
+        body.presentation-mode #main-content-col {
+            grid-column: span 12 / span 12 !important;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        body.presentation-mode .academic-prose {
+            font-size: 1.1rem;
+            line-height: 1.95;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11pt;
+            }
+            #main-content-col {
+                grid-column: span 12 / span 12 !important;
+                width: 100% !important;
+            }
+            section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                margin-bottom: 1.5rem !important;
+            }
+            a[href^="http"]::after {
+                content: " (" attr(href) ")";
+                font-size: 8.5pt;
+                color: #475569;
+            }
+        }
+
+        /* Smooth fade-in animation */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-up {
+            animation: fadeSlideUp 0.35s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-medis-600 selection:text-white">
+
+    <!-- Top Reading Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-200/70 z-50 no-print">
+        <div id="reading-progress" class="h-full bg-gradient-to-r from-medis-600 via-tealmed-600 to-gold-500 transition-all duration-150" style="width: 0%;"></div>
+    </div>
+
+    <!-- Custom Toast Notification (Replaces alert()) -->
+    <div id="toast-container" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-4 no-print">
+        <div class="bg-navy-900 text-white px-5 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center space-x-3 text-sm font-medium">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-medis-500 text-base"></i>
+            <span id="toast-message">Notifikasi sistem</span>
+        </div>
+    </div>
+
+    <!-- Sticky Top Header Bar -->
+    <header class="sticky top-1.5 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between py-3 gap-3">
+                <!-- Brand Identity -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-medis-700 to-tealmed-700 text-white flex items-center justify-center shadow-sm shrink-0">
+                        <i class="fa-solid fa-scale-balanced text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-extrabold text-navy-900 text-sm sm:text-base tracking-tight">MEDIKO-ETIKA RM</span>
+                            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-gold-100 text-gold-700 border border-gold-500/30">
+                                Kelompok 4
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500">S1 Administrasi Rumah Sakit • Manajemen Rekam Medis</p>
+                    </div>
+                </div>
+
+                <!-- Search Input + Action Buttons -->
+                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                    <!-- Quick Search Materi -->
+                    <div class="relative flex-1 sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input 
+                            type="text" 
+                            id="search-materi" 
+                            placeholder="Cari pasal, UU, bioetika, RME..." 
+                            class="w-full pl-8 pr-8 py-2 text-xs sm:text-sm bg-slate-100 border border-slate-200 rounded-xl focus:bg-white focus:border-medis-600 focus:ring-2 focus:ring-medis-500/20 focus:outline-none transition"
+                        >
+                        <button id="clear-search" onclick="resetSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs p-1" title="Hapus pencarian">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Mode Presentasi Toggle -->
+                    <button 
+                        id="btn-presentation" 
+                        onclick="togglePresentationMode()" 
+                        class="px-3 py-2 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs sm:text-sm font-semibold transition flex items-center space-x-1.5 shadow-sm shrink-0"
+                        title="Aktifkan Mode Presentasi Kelas"
+                    >
+                        <i class="fa-solid fa-person-chalkboard text-gold-500"></i>
+                        <span class="hidden md:inline">Presentasi</span>
+                    </button>
+
+                    <!-- Mode Cetak Button -->
+                    <button 
+                        onclick="window.print()" 
+                        class="px-3 py-2 rounded-xl bg-medis-50 hover:bg-medis-100 text-medis-800 border border-medis-200 text-xs sm:text-sm font-semibold transition flex items-center space-x-1.5 shrink-0"
+                        title="Cetak atau Simpan PDF"
+                    >
+                        <i class="fa-solid fa-print"></i>
+                        <span class="hidden md:inline">Cetak</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Horizontal Pill Menu -->
+        <div class="lg:hidden border-t border-slate-100 bg-slate-50/90 px-4 py-2 overflow-x-auto no-scrollbar">
+            <nav class="flex items-center space-x-2 min-w-max" id="mobile-nav">
+                <a href="#sec-dualisme" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">1. Kepemilikan & ALFRED</a>
+                <a href="#sec-regulasi" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">2. Matriks Regulasi</a>
+                <a href="#sec-etika" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">3. Bioetika & RME</a>
+                <a href="#sec-lab-pelepasan" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">4. Lab: Pelepasan Info</a>
+                <a href="#sec-lab-retensi" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">5. Lab: Retensi 25 Thn</a>
+                <a href="#sec-lab-kuis" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">6. Lab: Kuis Kasus</a>
+                <a href="#sec-referensi" class="mobile-pill px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-medis-600 transition">7. Acuan Resmi</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Search Filter Status Banner -->
+    <div id="search-status-bar" class="hidden bg-gold-50 border-b border-gold-500/30 py-2.5 px-4 no-print">
+        <div class="max-w-7xl mx-auto flex items-center justify-between text-xs sm:text-sm text-gold-700">
+            <div>
+                <i class="fa-solid fa-filter mr-1.5"></i>
+                Menampilkan hasil filter untuk kata kunci: <strong id="search-term-display">""</strong> (<span id="search-match-count">0</span> bagian relevan)
+            </div>
+            <button onclick="resetSearch()" class="font-bold underline hover:text-navy-900">Tampilkan Semua Materi</button>
+        </div>
+    </div>
+
+    <!-- 1. HERO BANNER AKADEMIS -->
+    <section class="hero-pattern text-white py-10 sm:py-14 border-b border-slate-800 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Academic Course Badge -->
+            <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs sm:text-sm font-medium text-medis-100 mb-5">
+                <span class="w-2 h-2 rounded-full bg-medis-500 animate-pulse"></span>
+                <span>Prodi S1 Administrasi Rumah Sakit</span>
+                <span class="text-slate-400">•</span>
+                <span>Mata Kuliah: <strong class="text-white">Manajemen Rekam Medis</strong></span>
+                <span class="text-slate-400">•</span>
+                <span class="text-gold-400 font-bold">Kelompok 4</span>
+            </div>
+
+            <!-- Main Title & Subtitle -->
+            <div class="max-w-4xl">
+                <h1 class="text-2xl sm:text-4xl lg:text-[2.65rem] font-extrabold tracking-tight leading-tight text-white">
+                    Legalitas dan Etika dalam Penyelenggaraan Rekam Medis &amp; RME
+                </h1>
+                <p class="mt-4 text-sm sm:text-lg text-slate-300 leading-relaxed max-w-3xl">
+                    Kajian komprehensif tata kelola hukum, pelindungan data pribadi kesehatan, bioetika profesi, serta simulasi pengambilan keputusan manajerial di fasilitas pelayanan kesehatan Indonesia.
+                </p>
+            </div>
+
+            <!-- 4 Key Metric Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-medis-400">Payung Hukum Utama</span>
+                        <i class="fa-solid fa-gavel text-medis-400"></i>
+                    </div>
+                    <div class="text-xl font-extrabold text-white">Pasal 296–300</div>
+                    <div class="text-xs text-slate-300 mt-1">UU No. 17 Tahun 2023 tentang Kesehatan</div>
+                </div>
+
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-teal-300">Digitalisasi &amp; CIA</span>
+                        <i class="fa-solid fa-laptop-medical text-teal-300"></i>
+                    </div>
+                    <div class="text-xl font-extrabold text-white">Permenkes 24/2022</div>
+                    <div class="text-xs text-slate-300 mt-1">Wajib Rekam Medis Elektronik (RME)</div>
+                </div>
+
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gold-400">Privasi Data Kesehatan</span>
+                        <i class="fa-solid fa-shield-halved text-gold-400"></i>
+                    </div>
+                    <div class="text-xl font-extrabold text-white">UU No. 27/2022 PDP</div>
+                    <div class="text-xs text-slate-300 mt-1">Pasal 4(2)(a): Data Pribadi Spesifik</div>
+                </div>
+
+                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Penyimpanan Arsip</span>
+                        <i class="fa-solid fa-clock-rotate-left text-emerald-300"></i>
+                    </div>
+                    <div class="text-xl font-extrabold text-white">Minimal 25 Tahun</div>
+                    <div class="text-xs text-slate-300 mt-1">Retensi RME Sejak Kunjungan Terakhir</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-1 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- Desktop Sticky Sidebar Navigation -->
+            <aside id="desktop-sidebar" class="hidden lg:block lg:col-span-3 sticky top-24 space-y-5 no-print">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+                    <div class="flex items-center justify-between px-2 mb-3">
+                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Navigasi Modul</span>
+                        <span class="text-[11px] font-semibold text-medis-700 bg-medis-50 px-2 py-0.5 rounded-full">7 Bagian</span>
+                    </div>
+                    <nav class="space-y-1" id="desktop-nav">
+                        <a href="#sec-dualisme" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-medis-50 hover:text-medis-800 transition">
+                            <i class="fa-solid fa-folder-tree w-4 text-center text-medis-600"></i>
+                            <span>Hakikat &amp; Dualisme RM</span>
+                        </a>
+                        <a href="#sec-regulasi" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-medis-50 hover:text-medis-800 transition">
+                            <i class="fa-solid fa-book-bookmark w-4 text-center text-medis-600"></i>
+                            <span>Matriks Regulasi Hukum</span>
+                        </a>
+                        <a href="#sec-etika" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-medis-50 hover:text-medis-800 transition">
+                            <i class="fa-solid fa-heart-pulse w-4 text-center text-medis-600"></i>
+                            <span>Pilar Bioetika &amp; RME</span>
+                        </a>
+                        <div class="pt-2 pb-1 px-3">
+                            <span class="text-[11px] font-extrabold text-gold-700 uppercase tracking-wider">Laboratorium Interaktif</span>
+                        </div>
+                        <a href="#sec-lab-pelepasan" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-gold-50 hover:text-gold-800 transition">
+                            <i class="fa-solid fa-user-shield w-4 text-center text-gold-600"></i>
+                            <span>Lab 1: Pelepasan Informasi</span>
+                        </a>
+                        <a href="#sec-lab-retensi" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-gold-50 hover:text-gold-800 transition">
+                            <i class="fa-solid fa-calculator w-4 text-center text-gold-600"></i>
+                            <span>Lab 2: Kalkulator Retensi</span>
+                        </a>
+                        <a href="#sec-lab-kuis" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-gold-50 hover:text-gold-800 transition">
+                            <i class="fa-solid fa-clipboard-question w-4 text-center text-gold-600"></i>
+                            <span>Lab 3: Kuis Studi Kasus</span>
+                        </a>
+                        <div class="border-t border-slate-100 my-1"></div>
+                        <a href="#sec-referensi" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-medis-50 hover:text-medis-800 transition">
+                            <i class="fa-solid fa-link w-4 text-center text-tealmed-600"></i>
+                            <span>Acuan &amp; Hyperlink Resmi</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Academic Info Card -->
+                <div class="bg-gradient-to-br from-navy-900 to-navy-800 text-white rounded-2xl p-5 shadow-sm border border-slate-700">
+                    <div class="flex items-center space-x-2 text-gold-400 text-xs font-bold uppercase tracking-wider mb-2">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>Identitas Penyusun</span>
+                    </div>
+                    <p class="text-sm font-bold text-white">Kelompok 4</p>
+                    <p class="text-xs text-slate-300 mt-0.5">Program Studi S1 Administrasi Rumah Sakit</p>
+                    <p class="text-xs text-medis-400 font-medium mt-2">MK: Manajemen Rekam Medis</p>
+                    <div class="mt-4 pt-3 border-t border-slate-700/80 text-[11px] text-slate-400 leading-relaxed">
+                        Gunakan tombol <strong class="text-white">Presentasi</strong> di pojok kanan atas untuk tampilan proyektor kelas.
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Column -->
+            <main id="main-content-col" class="lg:col-span-9 space-y-10">
+
+                <!-- SECTION 2: HAKIKAT & DUALISME KEPEMILIKAN REKAM MEDIS + ALFRED -->
+                <section id="sec-dualisme" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-medis-600 text-white font-bold text-sm flex items-center justify-center">01</span>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900">Hakikat &amp; Dualisme Kepemilikan Rekam Medis</h2>
+                                <p class="text-xs sm:text-sm text-slate-500">Pemisahan yuridis antara wadah dokumen dengan substansi informasi klinis pasien</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-medis-50 text-medis-700 border border-medis-200">
+                            Pasal 296–298 UU 17/2023
+                        </span>
+                    </div>
+
+                    <p class="academic-prose text-slate-700 text-sm sm:text-base mb-6">
+                        Dalam hukum kesehatan dan administrasi rumah sakit, rekam medis memiliki karakteristik kepemilikan ganda (<em>dualisme kepemilikan</em>). Pemahaman yang tepat atas batas kepemilikan ini mencegah sengketa hukum ketika pasien meminta salinan data medis atau ketika rumah sakit mengelola sistem penyimpanan dokumen.
+                    </p>
+
+                    <!-- Visual Comparison Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                        <!-- Card A: Kepemilikan Dokumen / Sistem -->
+                        <div class="rounded-2xl border-2 border-navy-800/15 bg-slate-50 p-5 sm:p-6 relative overflow-hidden">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-navy-900 text-white flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-hospital text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-navy-800 bg-slate-200 px-2 py-0.5 rounded">Aspek Fisik &amp; Infrastruktur</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900 mt-1">Milik Fasilitas Pelayanan Kesehatan (RS)</h3>
+                                </div>
+                            </div>
+                            <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check-circle text-navy-800 mt-1 shrink-0"></i>
+                                    <span><strong>Objek Kepemilikan:</strong> Berkas fisik rekam medis, formulir, server database, aplikasi Rekam Medis Elektronik (RME), dan infrastruktur TIK rumah sakit.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check-circle text-navy-800 mt-1 shrink-0"></i>
+                                    <span><strong>Kewajiban Hukum RS:</strong> Menyimpan, memelihara keutuhan (<em>integrity</em>), menjamin ketersediaan (<em>availability</em>), dan melindungi dari kerusakan atau akses ilegal.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-gold-600 mt-1 shrink-0"></i>
+                                    <span><strong>Implikasi Manajerial:</strong> Berkas asli tidak boleh dibawa pulang oleh pasien atau pihak luar kecuali atas perintah penetapan pengadilan yang sah.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Card B: Kepemilikan Isi Informasi Medis -->
+                        <div class="rounded-2xl border-2 border-medis-600/30 bg-medis-50/50 p-5 sm:p-6 relative overflow-hidden">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-medis-600 text-white flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-user-check text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-medis-800 bg-medis-100 px-2 py-0.5 rounded">Aspek Substansi Data</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-medis-900 mt-1">Milik Pasien (Subjek Data)</h3>
+                                </div>
+                            </div>
+                            <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check-circle text-medis-600 mt-1 shrink-0"></i>
+                                    <span><strong>Objek Kepemilikan:</strong> Seluruh isi informasi klinis, anamnesis, diagnosis, hasil laboratorium/radiologi, terapi, dan riwayat tindakan medis pasien.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check-circle text-medis-600 mt-1 shrink-0"></i>
+                                    <span><strong>Hak Pasien:</strong> Berhak mengetahui isi rekam medis, memperoleh salinan/ringkasan rekam medis, serta menentukan persetujuan pelepasan data ke pihak ketiga.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-shield-halved text-tealmed-700 mt-1 shrink-0"></i>
+                                    <span><strong>Implikasi Manajerial:</strong> Setiap pelepasan informasi medis wajib dilandasi persetujuan tertulis pasien atau ketentuan perundang-undangan.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Nilai Guna Rekam Medis: ALFRED -->
+                    <div class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                            <div>
+                                <h3 class="text-base sm:text-lg font-extrabold text-navy-900">Nilai Guna Rekam Medis (ALFRED) dalam Perspektif Administrasi RS</h3>
+                                <p class="text-xs text-slate-500">Klik kartu di bawah untuk melihat relevansi manajerial masing-masing dimensi nilai guna</p>
+                            </div>
+                            <span class="text-xs font-bold text-gold-700 bg-gold-50 px-3 py-1 rounded-full border border-gold-500/30">6 Dimensi Strategis</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="alfred-grid">
+                            <!-- A -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-medis-600 text-white font-extrabold flex items-center justify-center text-sm">A</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Administrative (Administrasi)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Menjadi dasar perencanaan kebutuhan SDM kesehatan, evaluasi mutu layanan, perencanaan logistik farmasi, serta pemenuhan standar akreditasi rumah sakit (STARKES/JCI).
+                                </p>
+                            </div>
+
+                            <!-- L -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-navy-900 text-white font-extrabold flex items-center justify-center text-sm">L</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Legal (Hukum)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Alat bukti tertulis yang sah di pengadilan (Pasal 184 KUHAP) untuk menjamin kepastian hukum serta melindungi hak pasien, tenaga medis, dan korporasi RS dari tuntutan malpraktik.
+                                </p>
+                            </div>
+
+                            <!-- F -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-gold-600 text-white font-extrabold flex items-center justify-center text-sm">F</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Financial (Keuangan)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Bukti autentik pelaksanaan tindakan klinis sebagai dasar penagihan biaya perawatan, verifikasi klaim INA-CBG BPJS Kesehatan maupun asuransi komersial, serta pencegahan <em>fraud</em>.
+                                </p>
+                            </div>
+
+                            <!-- R -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-tealmed-600 text-white font-extrabold flex items-center justify-center text-sm">R</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Research (Penelitian)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Menyediakan basis data epidemiologi, tren morbiditas-mortalitas, dan efektivitas terapi untuk penelitian klinis maupun manajemen pelayanan dengan tetap menjaga anonimitas pasien.
+                                </p>
+                            </div>
+
+                            <!-- E -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm">E</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Education (Pendidikan)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Instrumen pembelajaran studi kasus klinis dan tata kelola operasional RS bagi peserta didik kedokteran, keperawatan, perekam medis, dan administrasi rumah sakit.
+                                </p>
+                            </div>
+
+                            <!-- D -->
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-medis-500 hover:shadow-md transition">
+                                <div class="flex items-center space-x-2.5 mb-2">
+                                    <span class="w-8 h-8 rounded-lg bg-slate-700 text-white font-extrabold flex items-center justify-center text-sm">D</span>
+                                    <h4 class="font-bold text-navy-900 text-sm">Documentation (Dokumentasi)</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    Rekaman kronologis terintegrasi yang mendokumentasikan seluruh riwayat kesehatan dan kesinambungan komunikasi antar-Profesional Pemberi Asuhan (PPA) melalui catatan CPPT.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: MATRIKS REGULASI & LEGALITAS REKAM MEDIS (INTERAKTIF) -->
+                <section id="sec-regulasi" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-medis-600 text-white font-bold text-sm flex items-center justify-center">02</span>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900">Matriks Regulasi &amp; Legalitas Rekam Medis</h2>
+                                <p class="text-xs sm:text-sm text-slate-500">Filter berdasarkan hierarki peraturan perundang-undangan dan standar etik profesi</p>
+                            </div>
+                        </div>
+
+                        <!-- Filter Buttons -->
+                        <div class="flex flex-wrap gap-2 no-print" id="regulasi-filters">
+                            <button onclick="filterRegulasi('all', this)" class="reg-filter-btn active px-3.5 py-2 rounded-xl text-xs font-bold bg-navy-900 text-white transition">
+                                Semua (6)
+                            </button>
+                            <button onclick="filterRegulasi('uu', this)" class="reg-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                                Undang-Undang (3)
+                            </button>
+                            <button onclick="filterRegulasi('permenkes', this)" class="reg-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                                Permenkes / PP (2)
+                            </button>
+                            <button onclick="filterRegulasi('etik', this)" class="reg-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                                Kode Etik (1)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Regulation Cards Grid -->
+                    <div class="space-y-4" id="regulasi-list">
+                        
+                        <!-- Item 1: UU 17/2023 -->
+                        <article data-category="uu" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-navy-900 text-white mb-1.5">Undang-Undang</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">UU No. 17 Tahun 2023 tentang Kesehatan (Pasal 296–300)</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-medis-700 bg-medis-100 px-2.5 py-1 rounded-lg">Lex Specialis Kesehatan</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm text-slate-700 mt-3">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Pasal 296–297 (Kewajiban):</strong>
+                                    Setiap Fasyankes wajib menyelenggarakan rekam medis secara elektronik maupun non-elektronik pada kondisi tertentu yang diisi lengkap dan benar oleh tenaga medis/kesehatan.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Pasal 298 (Kerahasiaan):</strong>
+                                    Isi rekam medis bersifat rahasia dan wajib dijaga kerahasiaannya oleh seluruh tenaga medis, tenaga kesehatan, dan pimpinan Fasyankes.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Pasal 299–300 (Pembukaan):</strong>
+                                    Rahasia medis hanya dapat dibuka untuk kepentingan kesehatan pasien, permintaan aparat penegak hukum, persetujuan pasien, atau kepentingan penelitian/audit tanpa identitas.
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Item 2: Permenkes 24/2022 -->
+                        <article data-category="permenkes" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-tealmed-700 text-white mb-1.5">Permenkes / PP</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">Permenkes No. 24 Tahun 2022 tentang Rekam Medis</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-tealmed-800 bg-tealmed-100 px-2.5 py-1 rounded-lg">Transformasi RME Nasional</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm text-slate-700 mt-3">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Kewajiban RME &amp; Hak Akses:</strong>
+                                    Seluruh Fasyankes wajib menyelenggarakan Rekam Medis Elektronik (RME) dengan pengaturan hak akses berbasis kewenangan dan tanda tangan elektronik.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Prinsip CIA Security:</strong>
+                                    Keamanan sistem RME wajib memenuhi 3 pilar: <em>Confidentiality</em> (kerahasiaan), <em>Integrity</em> (keutuhan data), dan <em>Availability</em> (ketersediaan sistem).
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Retensi Minimal 25 Tahun:</strong>
+                                    Penyimpanan data RME di Fasyankes dilakukan paling singkat <strong>25 tahun</strong> sejak tanggal kunjungan terakhir pasien sebelum dapat dinilai untuk pemusnahan.
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Item 3: UU 27/2022 PDP -->
+                        <article data-category="uu" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-navy-900 text-white mb-1.5">Undang-Undang</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-gold-700 bg-gold-100 px-2.5 py-1 rounded-lg">Data Pribadi Spesifik</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm text-slate-700 mt-3">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Pasal 4 Ayat (2) Huruf a:</strong>
+                                    Data dan informasi kesehatan diklasifikasikan sebagai <strong>Data Pribadi yang Bersifat Spesifik</strong> karena berdampak besar bagi pemilik data bila bocor.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Persetujuan Eksplisit &amp; DPIA:</strong>
+                                    Pengendali data (RS) wajib memperoleh persetujuan eksplisit yang sah, menunjuk Petugas Pelindungan Data (DPO), dan melakukan <em>Data Protection Impact Assessment</em>.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Sanksi Kebocoran Data:</strong>
+                                    Kegagalan pelindungan data wajib dilaporkan maksimal 3×24 jam. Pelanggaran diancam denda administratif hingga 2% pendapatan tahunan serta sanksi pidana.
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Item 4: PP 28/2024 -->
+                        <article data-category="permenkes" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-tealmed-700 text-white mb-1.5">Permenkes / PP</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">PP No. 28 Tahun 2024 tentang Peraturan Pelaksanaan UU Kesehatan</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-tealmed-800 bg-tealmed-100 px-2.5 py-1 rounded-lg">Interoperabilitas SATUSEHAT</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                Mengatur tata kelola Sistem Informasi Kesehatan (SIK) secara nasional. Setiap Fasyankes wajib memenuhi standar metadata, kamus data klinis (ICD-10, ICD-9-CM, LOINC, SNOMED-CT), serta terintegrasi dengan Sistem Informasi Kesehatan Nasional (<strong>SATUSEHAT</strong>) Kemenkes RI dengan tetap menjamin keamanan siber dan kedaulatan data kesehatan.
+                            </p>
+                        </article>
+
+                        <!-- Item 5: KUHP & KUHPerdata -->
+                        <article data-category="uu" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-navy-900 text-white mb-1.5">Undang-Undang</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">KUHP (Pasal 322 KUHP Lama / Pasal 443 UU 1/2023) &amp; KUHPerdata Pasal 1365</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-red-700 bg-red-100 px-2.5 py-1 rounded-lg">Sanksi Pidana &amp; Perdata</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-700 mt-3">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Sanksi Pidana Pembocoran Rahasia Jabatan:</strong>
+                                    Pasal 322 KUHP (dan Pasal 443 UU No. 1 Tahun 2023 tentang KUHP Baru) mengancam pidana penjara atau denda bagi siapa pun yang dengan sengaja membuka rahasia yang wajib disimpannya karena jabatan atau pekerjaannya, baik saat masih menjabat maupun setelah pensiun.
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                    <strong class="text-navy-900 block mb-1">Gugatan Perdata (Pasal 1365 &amp; 1367 KUHPerdata):</strong>
+                                    Pasien yang dirugikan akibat kebocoran atau kelalaian pengelolaan rekam medis berhak menggugat ganti rugi atas Perbuatan Melawan Hukum (Pasal 1365), dan RS bertanggung jawab atas kelalaian pegawainya berdasarkan doktrin <em>Vicarious Liability</em> (Pasal 1367).
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Item 6: Kode Etik -->
+                        <article data-category="etik" class="reg-card rounded-2xl border border-slate-200 p-5 hover:border-medis-500 transition bg-slate-50/50">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[11px] font-extrabold uppercase bg-gold-600 text-white mb-1.5">Kode Etik &amp; Standar Profesi</span>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900">Kepmenkes No. HK.01.07/MENKES/312/2020 &amp; Kode Etik Profesi (PORMIKI / KODEKI)</h3>
+                                </div>
+                                <span class="text-xs font-semibold text-gold-800 bg-gold-100 px-2.5 py-1 rounded-lg">Disiplin &amp; Moral Profesi</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3.5 rounded-xl border border-slate-200/80">
+                                Menetapkan standar kompetensi, perilaku profesional, dan akuntabilitas moral bagi Perekam Medis dan Informasi Kesehatan (PMIK) serta tenaga medis. Mewajibkan integritas tinggi dalam pengodean klinis (anti-<em>fraud</em>), larangan memanipulasi isi rekam medis, serta kepatuhan absolut terhadap rahasia jabatan medis.
+                            </p>
+                        </article>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 4: PILAR ETIKA PROFESI & BIOETIKA REKAM MEDIS -->
+                <section id="sec-etika" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-medis-600 text-white font-bold text-sm flex items-center justify-center">03</span>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900">Pilar Etika Profesi &amp; Bioetika Rekam Medis</h2>
+                                <p class="text-xs sm:text-sm text-slate-500">Landasan moral dalam tata kelola konvensional maupun Rekam Medis Elektronik (RME)</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-gold-50 text-gold-700 border border-gold-500/30">
+                            Bioetika &amp; Etika Digital
+                        </span>
+                    </div>
+
+                    <!-- 4 Pilar Bioetika -->
+                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900 mb-3">A. Penerapan 4 Pilar Bioetika dalam Manajemen Rekam Medis</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                        <div class="p-5 rounded-2xl bg-medis-50/60 border border-medis-200">
+                            <div class="flex items-center space-x-2.5 mb-2">
+                                <div class="w-9 h-9 rounded-xl bg-medis-600 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-user-lock"></i>
+                                </div>
+                                <h4 class="font-extrabold text-navy-900 text-base">1. Autonomy (Otonomi Pasien)</h4>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                Menghormati hak otonom pasien untuk mengendalikan informasi pribadinya. Diwujudkan melalui mekanisme <em>Informed Consent</em>, surat kuasa tertulis pelepasan informasi, serta hak pasien menentukan siapa yang boleh mengetahui kondisi kesehatannya.
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-tealmed-50/60 border border-tealmed-200">
+                            <div class="flex items-center space-x-2.5 mb-2">
+                                <div class="w-9 h-9 rounded-xl bg-tealmed-600 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-hand-holding-heart"></i>
+                                </div>
+                                <h4 class="font-extrabold text-navy-900 text-base">2. Beneficence (Berbuat Baik)</h4>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                Memastikan rekam medis disusun secara akurat, lengkap, terbaca, dan tersedia cepat saat dibutuhkan dokter maupun perawat demi keselamatan pasien (<em>patient safety</em>) dan kesinambungan perawatan (<em>continuity of care</em>).
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200">
+                            <div class="flex items-center space-x-2.5 mb-2">
+                                <div class="w-9 h-9 rounded-xl bg-gold-600 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-shield-virus"></i>
+                                </div>
+                                <h4 class="font-extrabold text-navy-900 text-base">3. Non-Maleficence (Tidak Merugikan)</h4>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                Mencegah terjadinya kerugian psikologis, sosial, maupun finansial pada pasien akibat kebocoran diagnosis sensitif (seperti HIV/AIDS, gangguan psikiatri, penyakit menular seksual, atau korban kekerasan).
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-100/80 border border-slate-200">
+                            <div class="flex items-center space-x-2.5 mb-2">
+                                <div class="w-9 h-9 rounded-xl bg-navy-900 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-scale-balanced"></i>
+                                </div>
+                                <h4 class="font-extrabold text-navy-900 text-base">4. Justice (Keadilan)</h4>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                Memberikan standar perlindungan kerahasiaan dan pelayanan administrasi informasi medis secara adil tanpa diskriminasi status sosial, jabatan, maupun jenis penjamin biaya (pasien JKN maupun umum).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Kode Etik PORMIKI & KODEKI Pasal 16 -->
+                    <div class="bg-navy-900 text-white rounded-2xl p-5 sm:p-6 mb-8 relative overflow-hidden">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="space-y-2 max-w-2xl">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-gold-500/20 text-gold-400 border border-gold-500/30">
+                                    <i class="fa-solid fa-certificate mr-1.5"></i> Prinsip Abadi Kerahasiaan Medis
+                                </span>
+                                <h3 class="text-lg font-extrabold text-white">Kode Etik PMIK (PORMIKI) &amp; Pasal 16 KODEKI</h3>
+                                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                    Berdasarkan <strong>Kode Etik Perekam Medis dan Informasi Kesehatan (PORMIKI / Kepmenkes 312/2020)</strong> serta <strong>Pasal 16 Kode Etik Kedokteran Indonesia (KODEKI)</strong>, kewajiban menyimpan segala sesuatu yang diketahui tentang seorang pasien bersifat mutlak dan <strong class="text-medis-400 underline">tetap berlaku meskipun pasien tersebut telah meninggal dunia</strong>.
+                                </p>
+                            </div>
+                            <div class="bg-white/10 border border-white/15 rounded-xl p-4 text-center shrink-0">
+                                <i class="fa-solid fa-infinity text-2xl text-gold-400 mb-1 block"></i>
+                                <span class="text-xs font-bold uppercase tracking-wider text-white block">Post-Mortem</span>
+                                <span class="text-[11px] text-slate-300">Rahasia Tetap Mengikat</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Etika Digital & Tata Kelola RME -->
+                    <h3 class="text-base sm:text-lg font-extrabold text-navy-900 mb-3">B. Etika Digital &amp; Tata Kelola Keamanan RME</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                            <div class="text-medis-700 font-extrabold text-sm mb-1.5 flex items-center space-x-2">
+                                <i class="fa-solid fa-users-gear"></i>
+                                <span>Role-Based Access Control</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Hak akses (<em>view, input, edit, export</em>) dibatasi ketat sesuai peran profesi. Petugas pendaftaran tidak boleh memiliki akses membuka isi catatan klinis pasien.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                            <div class="text-red-700 font-extrabold text-sm mb-1.5 flex items-center space-x-2">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Larangan Password Sharing</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Akun RME melekat secara hukum pada tanda tangan elektronik pengguna. Meminjamkan <em>username/password</em> kepada rekan kerja merupakan pelanggaran etik dan hukum berat.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                            <div class="text-tealmed-700 font-extrabold text-sm mb-1.5 flex items-center space-x-2">
+                                <i class="fa-solid fa-shoe-prints"></i>
+                                <span>Audit Trail (Jejak Audit)</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Sistem RME wajib merekam jejak digital setiap akses (siapa membuka data pasien siapa, kapan, dan tindakan apa yang dilakukan) untuk mencegah pengintipan data (<em>snooping</em>).
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                            <div class="text-gold-700 font-extrabold text-sm mb-1.5 flex items-center space-x-2">
+                                <i class="fa-solid fa-file-pen"></i>
+                                <span>Aturan Addendum Koreksi</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Kesalahan entri dalam RME <strong>tidak boleh dihapus</strong>. Perbaikan wajib dilakukan melalui fitur <em>addendum</em> (catatan tambahan) yang mencatat waktu, alasan, dan identitas korektor.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: LAB INTERAKTIF 1 — SIMULATOR KEPUTUSAN PELEPASAN INFORMASI MEDIS -->
+                <section id="sec-lab-pelepasan" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border-2 border-medis-600/25">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-gold-600 text-white font-bold text-sm flex items-center justify-center">04</span>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-gold-700 bg-gold-100 px-2 py-0.5 rounded">Lab Interaktif 1</span>
+                                    <span class="text-xs text-slate-400">Simulasi Manajerial</span>
+                                </div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900 mt-0.5">Simulator Keputusan Pelepasan Informasi Medis</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-slate-600 mb-5">
+                        Pilih salah satu dari <strong>6 skenario permintaan informasi medis</strong> di loket Unit Rekam Medis Rumah Sakit berikut untuk menguji dan melihat keputusan hukum, dasar regulasi, serta langkah SOP Administrator RS:
+                    </p>
+
+                    <!-- 6 Scenario Buttons Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6" id="scenario-selector">
+                        <button onclick="selectScenario(0)" class="scenario-btn text-left p-3.5 rounded-xl border-2 border-medis-600 bg-medis-50/70 transition flex items-start space-x-3" data-idx="0">
+                            <span class="w-7 h-7 rounded-lg bg-navy-900 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Polisi Tanpa Surat Perintah Resmi</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Permintaan lisan kasus penganiayaan</div>
+                            </div>
+                        </button>
+
+                        <button onclick="selectScenario(1)" class="scenario-btn text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-medis-400 transition flex items-start space-x-3" data-idx="1">
+                            <span class="w-7 h-7 rounded-lg bg-slate-200 text-navy-900 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Asuransi dengan Surat Kuasa Pasien</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Klaim rawat inap bermeterai sah</div>
+                            </div>
+                        </button>
+
+                        <button onclick="selectScenario(2)" class="scenario-btn text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-medis-400 transition flex items-start space-x-3" data-idx="2">
+                            <span class="w-7 h-7 rounded-lg bg-slate-200 text-navy-900 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Pasangan / Keluarga Pasien Dewasa</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Tanpa izin pasien dewasa sadar</div>
+                            </div>
+                        </button>
+
+                        <button onclick="selectScenario(3)" class="scenario-btn text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-medis-400 transition flex items-start space-x-3" data-idx="3">
+                            <span class="w-7 h-7 rounded-lg bg-slate-200 text-navy-900 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Dinas Kesehatan Surveilans KLB</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Pelaporan wabah penyakit menular</div>
+                            </div>
+                        </button>
+
+                        <button onclick="selectScenario(4)" class="scenario-btn text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-medis-400 transition flex items-start space-x-3" data-idx="4">
+                            <span class="w-7 h-7 rounded-lg bg-slate-200 text-navy-900 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">5</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Peneliti Mahasiswa Tanpa Ethical Clearance</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Hanya membawa pengantar fakultas</div>
+                            </div>
+                        </button>
+
+                        <button onclick="selectScenario(5)" class="scenario-btn text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-medis-400 transition flex items-start space-x-3" data-idx="5">
+                            <span class="w-7 h-7 rounded-lg bg-slate-200 text-navy-900 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">6</span>
+                            <div>
+                                <div class="font-bold text-navy-900 text-xs sm:text-sm">Rujukan Antar-Faskes Pengobatan</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Kesinambungan terapi gawat darurat</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Decision Output Panel -->
+                    <div id="scenario-output" class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 animate-fade-up">
+                        <!-- Rendered by JS on load & click -->
+                    </div>
+                </section>
+
+                <!-- SECTION 6: LAB INTERAKTIF 2 — KALKULATOR & EVALUASI RETENSI SERTA PEMUSNAHAN REKAM MEDIS -->
+                <section id="sec-lab-retensi" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border-2 border-tealmed-600/25">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-tealmed-600 text-white font-bold text-sm flex items-center justify-center">05</span>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-tealmed-800 bg-tealmed-100 px-2 py-0.5 rounded">Lab Interaktif 2</span>
+                                    <span class="text-xs text-slate-400">Permenkes No. 24 Tahun 2022</span>
+                                </div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900 mt-0.5">Kalkulator &amp; Evaluasi Retensi serta Pemusnahan Rekam Medis</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Input Control Column -->
+                        <div class="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                            <div>
+                                <label for="retensi-tahun" class="block text-xs font-extrabold text-navy-900 uppercase tracking-wider mb-1.5">
+                                    Tahun Kunjungan Terakhir Pasien
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="retensi-tahun" 
+                                    min="1980" 
+                                    max="2026" 
+                                    value="2000" 
+                                    oninput="hitungRetensi()"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-navy-900 font-bold text-base focus:border-medis-600 focus:ring-2 focus:ring-medis-500/20 focus:outline-none"
+                                >
+                                <div class="flex flex-wrap gap-1.5 mt-2">
+                                    <button type="button" onclick="setTahunPreset(1999)" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white border border-slate-200 hover:border-medis-600 text-slate-700">Thn 1999 (Lewat 25 Thn)</button>
+                                    <button type="button" onclick="setTahunPreset(2001)" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white border border-slate-200 hover:border-medis-600 text-slate-700">Thn 2001 (Tepat 25 Thn)</button>
+                                    <button type="button" onclick="setTahunPreset(2019)" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white border border-slate-200 hover:border-medis-600 text-slate-700">Thn 2019 (Aktif Simpan)</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="retensi-kategori" class="block text-xs font-extrabold text-navy-900 uppercase tracking-wider mb-1.5">
+                                    Kategori Kasus Rekam Medis
+                                </label>
+                                <select 
+                                    id="retensi-kategori" 
+                                    onchange="hitungRetensi()"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-navy-900 font-semibold text-sm focus:border-medis-600 focus:ring-2 focus:ring-medis-500/20 focus:outline-none"
+                                >
+                                    <option value="umum">Pelayanan Umum (Rawat Jalan / Rawat Inap)</option>
+                                    <option value="medikolegal">Kasus Medikolegal / Sengketa Hukum</option>
+                                    <option value="kematian">Kasus Kematian di Rumah Sakit</option>
+                                    <option value="khusus">Pelayanan Khusus (Jiwa / Napza / Kusta / HIV)</option>
+                                </select>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-medis-50 border border-medis-200 text-xs text-medis-900 leading-relaxed">
+                                <strong>Acuan Regulasi:</strong> Pasal 39 Permenkes No. 24 Tahun 2022 menetapkan penyimpanan data RME di Fasyankes dilakukan paling singkat <strong>25 tahun</strong> sejak tanggal kunjungan terakhir pasien.
+                            </div>
+                        </div>
+
+                        <!-- Calculation Result & Checklist Column -->
+                        <div class="lg:col-span-7 space-y-4">
+                            <!-- Result Summary Box -->
+                            <div id="retensi-hasil-box" class="rounded-2xl p-5 border-2 border-medis-600 bg-medis-50/40">
+                                <!-- Populated via JS -->
+                            </div>
+
+                            <!-- Lembaran Wajib Dilestarikan -->
+                            <div class="rounded-2xl p-5 border border-slate-200 bg-white">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-extrabold text-navy-900 flex items-center space-x-2">
+                                        <i class="fa-solid fa-vault text-gold-600"></i>
+                                        <span>Lembaran Bernilai Guna Wajib Dilestarikan (Tidak Dimusnahkan)</span>
+                                    </h3>
+                                    <span class="text-[11px] font-bold text-slate-500">5 Dokumen Vital</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+                                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 cursor-pointer hover:bg-medis-50/50">
+                                        <input type="checkbox" checked class="accent-medis-600 rounded">
+                                        <span><strong>1. Ringkasan Pulang</strong> (<em>Discharge Summary</em>)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 cursor-pointer hover:bg-medis-50/50">
+                                        <input type="checkbox" checked class="accent-medis-600 rounded">
+                                        <span><strong>2. Informed Consent</strong> (Persetujuan Tindakan)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 cursor-pointer hover:bg-medis-50/50">
+                                        <input type="checkbox" checked class="accent-medis-600 rounded">
+                                        <span><strong>3. Identitas Bayi Lahir</strong> Hidup di RS</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 cursor-pointer hover:bg-medis-50/50">
+                                        <input type="checkbox" checked class="accent-medis-600 rounded">
+                                        <span><strong>4. Laporan Operasi</strong> / Tindakan Invasif</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 sm:col-span-2 cursor-pointer hover:bg-medis-50/50">
+                                        <input type="checkbox" checked class="accent-medis-600 rounded">
+                                        <span><strong>5. Surat Keterangan Kematian</strong> / Lembar Sebab Kematian</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 7: LAB INTERAKTIF 3 — KUIS STUDI KASUS ETIKA & LEGALITAS REKAM MEDIS -->
+                <section id="sec-lab-kuis" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border-2 border-navy-900/15">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-navy-900 text-white font-bold text-sm flex items-center justify-center">06</span>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-white bg-navy-900 px-2 py-0.5 rounded">Lab Interaktif 3</span>
+                                    <span class="text-xs text-slate-400">Evaluasi Kompetensi S1 ARS</span>
+                                </div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900 mt-0.5">Kuis Studi Kasus Etika &amp; Legalitas Rekam Medis</h2>
+                            </div>
+                        </div>
+
+                        <!-- Live Score Counter & Reset -->
+                        <div class="flex items-center space-x-3 no-print">
+                            <div class="px-4 py-2 rounded-xl bg-medis-50 border border-medis-200 text-right">
+                                <span class="text-[11px] font-bold text-medis-700 uppercase block">Skor Anda</span>
+                                <span id="quiz-score-display" class="text-base font-extrabold text-navy-900">0 / 5 (0%)</span>
+                            </div>
+                            <button onclick="resetQuiz()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-navy-900 text-xs font-bold transition flex items-center space-x-1.5">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Ulangi Kuis</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Questions Container -->
+                    <div id="quiz-container" class="space-y-6">
+                        <!-- Rendered dynamically via JS -->
+                    </div>
+
+                    <!-- Quiz Final Summary Banner -->
+                    <div id="quiz-summary-banner" class="hidden mt-6 p-5 rounded-2xl bg-gradient-to-r from-navy-900 to-medis-900 text-white">
+                        <!-- Populated when all 5 questions are answered -->
+                    </div>
+                </section>
+
+                <!-- SECTION 8: DAFTAR ACUAN KREDIBEL & HYPERLINK SUMBER RESMI -->
+                <section id="sec-referensi" class="searchable-section scroll-mt-28 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-medis-600 text-white font-bold text-sm flex items-center justify-center">07</span>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-navy-900">Daftar Acuan Kredibel &amp; Hyperlink Sumber Resmi</h2>
+                                <p class="text-xs sm:text-sm text-slate-500">Tautan langsung menuju portal peraturan negara, Kementerian Kesehatan RI, dan organisasi profesi</p>
+                            </div>
+                        </div>
+                        <button onclick="copyAllReferences()" class="no-print px-3.5 py-2 rounded-xl bg-medis-50 hover:bg-medis-100 text-medis-800 border border-medis-200 text-xs font-bold transition flex items-center space-x-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Salin Daftar Pustaka</span>
+                        </button>
+                    </div>
+
+                    <div id="reference-list" class="space-y-3.5 text-xs sm:text-sm">
+                        <!-- Ref 1 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-medis-700 uppercase">Regulasi Undang-Undang Kesehatan</span>
+                                <p class="font-bold text-navy-900">Republik Indonesia. (2023). <em>Undang-Undang Nomor 17 Tahun 2023 tentang Kesehatan</em> (Pasal 296–300 tentang Rekam Medis). Lembaran Negara RI Tahun 2023 Nomor 105.</p>
+                            </div>
+                            <a href="https://peraturan.bpk.go.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-navy-900 hover:bg-medis-700 text-white text-xs font-semibold transition">
+                                <span>Database BPK RI</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 2 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-tealmed-700 uppercase">Regulasi Kementerian Kesehatan RI</span>
+                                <p class="font-bold text-navy-900">Kementerian Kesehatan RI. (2022). <em>Peraturan Menteri Kesehatan Nomor 24 Tahun 2022 tentang Rekam Medis</em>. Berita Negara RI Tahun 2022 Nomor 829.</p>
+                            </div>
+                            <a href="https://jdih.kemkes.go.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-medis-600 hover:bg-medis-700 text-white text-xs font-semibold transition">
+                                <span>JDIH Kemenkes RI</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 3 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-gold-700 uppercase">Regulasi Pelindungan Data Pribadi</span>
+                                <p class="font-bold text-navy-900">Republik Indonesia. (2022). <em>Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi</em> (Pasal 4 Ayat 2 Huruf a tentang Data Kesehatan). Lembaran Negara RI Tahun 2022 Nomor 196.</p>
+                            </div>
+                            <a href="https://peraturan.bpk.go.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-navy-900 hover:bg-medis-700 text-white text-xs font-semibold transition">
+                                <span>Database BPK RI</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 4 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-tealmed-700 uppercase">Peraturan Pemerintah &amp; Hukum Pidana</span>
+                                <p class="font-bold text-navy-900">Republik Indonesia. (2024). <em>Peraturan Pemerintah Nomor 28 Tahun 2024 tentang Peraturan Pelaksanaan UU No. 17 Tahun 2023 tentang Kesehatan</em> &amp; <em>UU No. 1 Tahun 2023 (KUHP) Pasal 443</em>.</p>
+                            </div>
+                            <a href="https://peraturan.go.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-tealmed-700 hover:bg-tealmed-800 text-white text-xs font-semibold transition">
+                                <span>Peraturan.go.id</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 5 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-medis-700 uppercase">Interoperabilitas RME Nasional</span>
+                                <p class="font-bold text-navy-900">Kementerian Kesehatan RI. (2024). <em>Platform SATUSEHAT: Standar Interoperabilitas dan Tata Kelola Rekam Medis Elektronik Nasional</em>.</p>
+                            </div>
+                            <a href="https://satusehat.kemkes.go.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-medis-600 hover:bg-medis-700 text-white text-xs font-semibold transition">
+                                <span>SATUSEHAT Kemenkes</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 6 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-gold-700 uppercase">Standar Profesi &amp; Kode Etik PMIK</span>
+                                <p class="font-bold text-navy-900">Perhimpunan Profesional Perekam Medis dan Informasi Kesehatan Indonesia (PORMIKI) &amp; <em>Kepmenkes No. HK.01.07/MENKES/312/2020</em>.</p>
+                            </div>
+                            <a href="https://pormiki.or.id" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gold-600 hover:bg-gold-700 text-white text-xs font-semibold transition">
+                                <span>Portal PORMIKI</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 7 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-navy-800 uppercase">Kode Etik Kedokteran Indonesia</span>
+                                <p class="font-bold text-navy-900">Ikatan Dokter Indonesia (IDI). (2012). <em>Kode Etik Kedokteran Indonesia (KODEKI) Pasal 16 tentang Kewajiban Menyimpan Rahasia Kedokteran</em>.</p>
+                            </div>
+                            <a href="https://www.idionline.org" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold transition">
+                                <span>IDI Online</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+
+                        <!-- Ref 8 -->
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-medis-500 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <span class="text-[11px] font-bold text-tealmed-700 uppercase">Standar Bioetika Medis Internasional</span>
+                                <p class="font-bold text-navy-900">World Medical Association (WMA). (2017). <em>WMA Declaration of Geneva: The Physician's Pledge (Medical Confidentiality Standard)</em>.</p>
+                            </div>
+                            <a href="https://www.wma.net/policies-post/wma-declaration-of-geneva/" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-tealmed-700 hover:bg-tealmed-800 text-white text-xs font-semibold transition">
+                                <span>WMA Declaration</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Floating Presentation Navigator (Visible only in Presentation Mode) -->
+    <div id="presentation-controls" class="hidden fixed bottom-6 right-6 z-50 bg-navy-900/95 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 no-print">
+        <span class="text-xs font-bold text-gold-400 uppercase tracking-wider">Slide Presentasi</span>
+        <button onclick="navigateSlide(-1)" class="p-2 rounded-lg bg-slate-800 hover:bg-medis-600 transition text-xs" title="Bagian Sebelumnya">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <span id="slide-indicator" class="text-xs font-extrabold px-1">1 / 7</span>
+        <button onclick="navigateSlide(1)" class="p-2 rounded-lg bg-slate-800 hover:bg-medis-600 transition text-xs" title="Bagian Berikutnya">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button onclick="togglePresentationMode()" class="ml-2 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-xs font-bold transition">
+            Keluar
+        </button>
+    </div>
+
+    <!-- Academic Footer -->
+    <footer class="bg-navy-950 text-slate-400 py-8 mt-12 border-t border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+            <div class="text-center sm:text-left">
+                <p class="font-bold text-white text-sm">Legalitas &amp; Etika dalam Penyelenggaraan Rekam Medis &amp; RME</p>
+                <p class="mt-1">Disusun oleh <strong class="text-gold-400">Kelompok 4</strong> • Program Studi S1 Administrasi Rumah Sakit • Mata Kuliah Manajemen Rekam Medis</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#sec-dualisme" class="hover:text-medis-400 transition">Kembali ke Atas <i class="fa-solid fa-arrow-up ml-1"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript Application Logic -->
+    <script>
+        // ==========================================
+        // 1. TOAST NOTIFICATION HELPER (NO ALERT)
+        // ==========================================
+        let toastTimeout;
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toast-container');
+            const msgEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.textContent = message;
+            iconEl.className = isError 
+                ? 'fa-solid fa-circle-exclamation text-red-400 text-base' 
+                : 'fa-solid fa-circle-check text-medis-400 text-base';
+
+            container.classList.remove('opacity-0', 'translate-y-4');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                container.classList.add('opacity-0', 'translate-y-4');
+            }, 3000);
+        }
+
+        // ==========================================
+        // 2. READING PROGRESS BAR & SCROLLSPY
+        // ==========================================
+        const sections = document.querySelectorAll('.searchable-section');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const mobilePills = document.querySelectorAll('.mobile-pill');
+
+        window.addEventListener('scroll', () => {
+            // Progress bar calculation
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('reading-progress').style.width = `${Math.min(100, Math.max(0, progress))}%`;
+
+            // Scrollspy active section
+            let currentId = '';
+            sections.forEach(sec => {
+                const top = sec.offsetTop - 160;
+                if (scrollTop >= top) {
+                    currentId = sec.getAttribute('id');
+                }
+            });
+
+            sidebarLinks.forEach(link => {
+                link.classList.remove('bg-medis-50', 'text-medis-800', 'font-bold', 'border-l-4', 'border-medis-600');
+                if (currentId && link.getAttribute('href') === `#${currentId}`) {
+                    link.classList.add('bg-medis-50', 'text-medis-800', 'font-bold', 'border-l-4', 'border-medis-600');
+                }
+            });
+
+            mobilePills.forEach(pill => {
+                pill.classList.remove('bg-medis-600', 'text-white', 'border-medis-600');
+                pill.classList.add('bg-white', 'text-slate-700');
+                if (currentId && pill.getAttribute('href') === `#${currentId}`) {
+                    pill.classList.remove('bg-white', 'text-slate-700');
+                    pill.classList.add('bg-medis-600', 'text-white', 'border-medis-600');
+                }
+            });
+        });
+
+        // ==========================================
+        // 3. REAL-TIME SEARCH & FILTER MATERI
+        // ==========================================
+        const searchInput = document.getElementById('search-materi');
+        const clearBtn = document.getElementById('clear-search');
+        const statusBar = document.getElementById('search-status-bar');
+        const termDisplay = document.getElementById('search-term-display');
+        const matchCountDisplay = document.getElementById('search-match-count');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            if (!query) {
+                resetSearch();
+                return;
+            }
+
+            clearBtn.classList.remove('hidden');
+            statusBar.classList.remove('hidden');
+            termDisplay.textContent = `"${this.value.trim()}"`;
+
+            let matchedSections = 0;
+            sections.forEach(sec => {
+                const text = sec.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    sec.classList.remove('hidden');
+                    matchedSections++;
+                } else {
+                    sec.classList.add('hidden');
+                }
+            });
+
+            matchCountDisplay.textContent = matchedSections;
+        });
+
+        function resetSearch() {
+            searchInput.value = '';
+            clearBtn.classList.add('hidden');
+            statusBar.classList.add('hidden');
+            sections.forEach(sec => sec.classList.remove('hidden'));
+        }
+
+        // ==========================================
+        // 4. PRESENTATION MODE & SLIDE NAVIGATOR
+        // ==========================================
+        let currentSlideIdx = 0;
+        function togglePresentationMode() {
+            const isActive = document.body.classList.toggle('presentation-mode');
+            const controls = document.getElementById('presentation-controls');
+            const btn = document.getElementById('btn-presentation');
+
+            if (isActive) {
+                controls.classList.remove('hidden');
+                btn.classList.replace('bg-navy-900', 'bg-gold-600');
+                currentSlideIdx = 0;
+                updateSlideIndicator();
+                showToast('Mode Presentasi Kelas diaktifkan');
+            } else {
+                controls.classList.add('hidden');
+                btn.classList.replace('bg-gold-600', 'bg-navy-900');
+                showToast('Mode Presentasi dinonaktifkan');
+            }
+        }
+
+        function navigateSlide(dir) {
+            const secArray = Array.from(sections);
+            currentSlideIdx = Math.max(0, Math.min(secArray.length - 1, currentSlideIdx + dir));
+            updateSlideIndicator();
+            secArray[currentSlideIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateSlideIndicator() {
+            document.getElementById('slide-indicator').textContent = `${currentSlideIdx + 1} / ${sections.length}`;
+        }
+
+        // ==========================================
+        // 5. REGULASI CATEGORY FILTER
+        // ==========================================
+        function filterRegulasi(category, btnEl) {
+            // Update active button styling
+            document.querySelectorAll('.reg-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-navy-900', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            btnEl.classList.remove('bg-slate-100', 'text-slate-700');
+            btnEl.classList.add('bg-navy-900', 'text-white');
+
+            // Filter cards
+            document.querySelectorAll('.reg-card').forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                    card.classList.add('animate-fade-up');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // ==========================================
+        // 6. LAB INTERAKTIF 1: SIMULATOR PELEPASAN INFORMASI MEDIS
+        // ==========================================
+        const scenariosData = [
+            {
+                title: "Skenario 1: Aparat Kepolisian Meminta Rekam Medis Tanpa Surat Perintah Resmi",
+                context: "Dua orang petugas kepolisian mendatangi unit rekam medis RS secara lisan dan meminta fotokopi lengkap rekam medis pasien korban penganiayaan untuk keperluan penyelidikan awal, tanpa membawa surat permintaan resmi dari penyidik maupun surat kuasa dari pasien.",
+                status: "DITOLAK",
+                badgeClass: "bg-red-600 text-white",
+                borderClass: "border-red-300 bg-red-50/50",
+                icon: "fa-circle-xmark text-red-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 tentang Kesehatan Pasal 299 ayat (1) huruf b: Pembukaan rahasia medis untuk kepentingan penegakan hukum hanya dapat dilakukan atas permintaan resmi aparat penegak hukum atau perintah pengadilan.",
+                    "Permenkes No. 24 Tahun 2022: Pelepasan informasi medis kepada penegak hukum wajib disertai dasar surat permintaan tertulis yang sah.",
+                    "KUHP Pasal 322 / Pasal 443 UU 1/2023: Membuka rahasia jabatan tanpa dasar hukum yang sah merupakan tindak pidana."
+                ],
+                sopSteps: [
+                    "Sampaikan penolakan secara sopan, empatik, dan profesional dengan menjelaskan ketentuan UU Kesehatan.",
+                    "Arahkan petugas kepolisian untuk mengajukan surat permintaan resmi yang ditandatangani Kepala Kepolisian/Penyidik yang berwenang dan ditujukan kepada Direktur RS.",
+                    "Jika kepentingan hukum berupa Visum et Repertum (VeR), pastikan adanya Surat Permintaan Visum (SPV) resmi dari penyidik sebelum dokter pemeriksa menerbitkan VeR.",
+                    "Catat permohonan tersebut dalam buku log permintaan informasi eksternal unit rekam medis."
+                ]
+            },
+            {
+                title: "Skenario 2: Perusahaan Asuransi Swasta dengan Surat Kuasa Tertulis Pasien",
+                context: "Staf verifikasi klaim asuransi swasta mengajukan permohonan ringkasan riwayat perawatan pasien rawat inap dengan melampirkan surat kuasa asli bermeterai yang ditandatangani pasien, fotokopi KTP pasien, serta kartu identitas petugas asuransi.",
+                status: "DIIZINKAN",
+                badgeClass: "bg-medis-600 text-white",
+                borderClass: "border-medis-300 bg-medis-50/50",
+                icon: "fa-circle-check text-medis-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 Pasal 299 ayat (1) huruf c: Rahasia medis dapat dibuka atas dasar persetujuan pasien sendiri.",
+                    "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi Pasal 20 ayat (2): Pemrosesan data pribadi spesifik sah apabila terdapat persetujuan eksplisit yang sah dari subjek data.",
+                    "Prinsip Bioetika Autonomy: Menghormati kehendak pasien yang memberikan kuasa secara sadar untuk kepentingan klaim pembiayaannya."
+                ],
+                sopSteps: [
+                    "Verifikasi keaslian tanda tangan pasien pada surat kuasa dengan membandingkannya terhadap spesimen tanda tangan di formulir General Consent awal masuk RS.",
+                    "Pastikan lingkup informasi yang diminta sesuai dengan batas kuasa yang diberikan pasien (hanya memberikan Resume Medis / ringkasan pulang, bukan berkas asli).",
+                    "Arsipkan surat kuasa asli beserta salinan identitas pemohon ke dalam berkas/sistem RME pasien.",
+                    "Catat riwayat pelepasan informasi pada log audit pelepasan informasi medis (tanggal, penerima, dan jenis dokumen)."
+                ]
+            },
+            {
+                title: "Skenario 3: Pasangan / Keluarga Pasien Dewasa Meminta Diagnosis Tanpa Izin",
+                context: "Seorang suami datang ke loket rekam medis meminta rincian diagnosis laboratorium dan riwayat pengobatan istrinya (usia 32 tahun, sadar penuh dan cakap hukum) tanpa membawa surat kuasa atau persetujuan dari sang istri.",
+                status: "DITOLAK",
+                badgeClass: "bg-red-600 text-white",
+                borderClass: "border-red-300 bg-red-50/50",
+                icon: "fa-circle-xmark text-red-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 Pasal 298–299: Pasien dewasa yang cakap hukum adalah pemilik tunggal atas isi informasi medisnya; ikatan perkawinan atau keluarga tidak otomatis menggugurkan hak privasi pasien.",
+                    "UU No. 27 Tahun 2022 PDP Pasal 4 ayat (2) huruf a: Data kesehatan merupakan Data Pribadi Spesifik yang dilindungi ketat dari akses pihak ketiga tanpa persetujuan eksplisit.",
+                    "Prinsip Bioetika Non-Maleficence & Autonomy: Mencegah potensi konflik rumah tangga atau stigma akibat pembukaan data tanpa izin pemilik data."
+                ],
+                sopSteps: [
+                    "Tolak permintaan dengan bahasa yang santun dan edukatif mengenai aturan kerahasiaan data pribadi pasien dewasa.",
+                    "Jelaskan bahwa informasi medis hanya dapat diberikan langsung kepada pasien yang bersangkutan atau kepada keluarga apabila disertai surat kuasa tertulis dari pasien.",
+                    "Pengecualian hanya berlaku jika pasien dalam kondisi tidak sadar/tidak cakap hukum sehingga persetujuan diwakili oleh wali sah sesuai urutan hukum."
+                ]
+            },
+            {
+                title: "Skenario 4: Dinas Kesehatan Meminta Data Surveilans KLB / Wabah",
+                context: "Tim Surveilans Epidemiologi Dinas Kesehatan Kota mengirimkan surat tugas resmi meminta data laporan kasus penyakit menular berpotensi Kejadian Luar Biasa (KLB/wabah) guna pemetaan penularan dan tindakan pencegahan massal.",
+                status: "DIIZINKAN",
+                badgeClass: "bg-medis-600 text-white",
+                borderClass: "border-medis-300 bg-medis-50/50",
+                icon: "fa-circle-check text-medis-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 Pasal 299 ayat (1) huruf e & Pasal 300: Pembukaan rahasia medis dikecualikan untuk pemenuhan permintaan institusi berwenang sesuai ketentuan peraturan perundang-undangan (surveilans wabah/KLB).",
+                    "UU No. 27 Tahun 2022 PDP Pasal 15 ayat (1) huruf b: Kewajiban pelindungan data dapat dikecualikan untuk kepentingan pertahanan, keamanan, serta kepentingan umum dalam rangka penyelenggaraan negara (kesehatan masyarakat).",
+                    "PP No. 28 Tahun 2024: Kewajiban pelaporan sistem surveilans penyakit menular oleh Fasyankes."
+                ],
+                sopSteps: [
+                    "Verifikasi surat tugas resmi dari Kepala Dinas Kesehatan dan identitas petugas surveilans yang berwenang.",
+                    "Koordinasikan persetujuan pelepasan data dengan Komite Pencegahan dan Pengendalian Infeksi (PPI) serta Direktur RS.",
+                    "Serahkan data pelaporan surveilans melalui saluran resmi terenkripsi/sistem pelaporan wajib Kemenkes dengan berita acara serah terima.",
+                    "Pastikan data hanya digunakan sebatas kepentingan penanggulangan KLB/wabah dan tidak dipublikasikan ke media umum dengan identitas pasien."
+                ]
+            },
+            {
+                title: "Skenario 5: Peneliti Mahasiswa Meminta Akses Berkas Tanpa Ethical Clearance",
+                context: "Seorang mahasiswa tingkat akhir datang membawa surat pengantar dari fakultas untuk meneliti 100 berkas rekam medis pasien kanker payudara, namun belum memiliki surat persetujuan kaji etik (Ethical Clearance) maupun izin Direktur RS.",
+                status: "DITOLAK",
+                badgeClass: "bg-red-600 text-white",
+                borderClass: "border-red-300 bg-red-50/50",
+                icon: "fa-circle-xmark text-red-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 Pasal 299 ayat (1) huruf d: Penggunaan informasi rekam medis untuk kepentingan pendidikan dan penelitian wajib memenuhi standar etik dan tidak mencantumkan identitas pasien.",
+                    "Permenkes No. 24 Tahun 2022: Akses pihak eksternal terhadap sistem/berkas rekam medis untuk penelitian wajib memperoleh izin pimpinan Fasyankes setelah lolos kaji etik.",
+                    "Prinsip Bioetika & Deklarasi Helsinki: Setiap penelitian yang melibatkan data kesehatan manusia wajib melalui telaah Komite Etik Penelitian Kesehatan (KEPK)."
+                ],
+                sopSteps: [
+                    "Tolak sementara permintaan akses berkas/RME karena kelengkapan syarat etik dan administratif belum terpenuhi.",
+                    "Arahkan mahasiswa untuk mengajukan proposal ke Komite Etik Penelitian Kesehatan (KEPK) guna memperoleh Ethical Clearance dan mengajukan izin resmi ke Bagian Diklit/Direktur RS.",
+                    "Apabila izin telah lengkap di kemudian hari, petugas RM wajib melakukan de-identifikasi (menghapus nama, NIK, alamat, nomor RM) sebelum data diberikan kepada peneliti."
+                ]
+            },
+            {
+                title: "Skenario 6: Permintaan Data Rujukan Antar-Faskes untuk Kesinambungan Terapi",
+                context: "Dokter jaga IGD di RS Rujukan Tipe A menghubungi Unit Rekam Medis RS Tipe C untuk meminta ringkasan catatan klinis dan hasil penunjang pasien rujukan gawat darurat yang sedang menjalani tindakan penyelamatan nyawa.",
+                status: "BERSYARAT",
+                badgeClass: "bg-gold-600 text-white",
+                borderClass: "border-gold-500/50 bg-gold-50/50",
+                icon: "fa-triangle-exclamation text-gold-600",
+                dasarHukum: [
+                    "UU No. 17 Tahun 2023 Pasal 299 ayat (1) huruf a: Pembukaan informasi rekam medis diizinkan untuk kepentingan pemeliharaan kesehatan, pengobatan, penyembuhan, dan perawatan pasien (continuity of care).",
+                    "PP No. 28 Tahun 2024 & Platform SATUSEHAT: Interoperabilitas pertukaran resume medis antar-Fasyankes dalam sistem rujukan terintegrasi.",
+                    "Prinsip Bioetika Beneficence: Mengutamakan keselamatan jiwa dan kesinambungan terapi pasien dengan tetap menjaga verifikasi keamanan saluran komunikasi."
+                ],
+                sopSteps: [
+                    "Lakukan verifikasi identitas dan otoritas Fasyankes penerima rujukan (nomor surat rujukan resmi / verifikasi telepon resmi IGD RS penerima).",
+                    "Pastikan adanya persetujuan rujukan dari pasien atau keluarga pendamping pada formulir persetujuan rujukan.",
+                    "Kirimkan hanya ringkasan klinis relevan (Resume Medis, hasil lab/radiologi kritis, terapi terakhir) melalui jalur resmi terenkripsi atau integrasi SATUSEHAT.",
+                    "Dokumentasikan identitas dokter/Fasyankes penerima dan waktu pengiriman pada log pelepasan informasi."
+                ]
+            }
+        ];
+
+        function selectScenario(idx) {
+            // Update active button style
+            document.querySelectorAll('.scenario-btn').forEach((btn, i) => {
+                const badge = btn.querySelector('span');
+                if (i === idx) {
+                    btn.classList.remove('border', 'border-slate-200', 'bg-white');
+                    btn.classList.add('border-2', 'border-medis-600', 'bg-medis-50/70');
+                    badge.classList.replace('bg-slate-200', 'bg-navy-900');
+                    badge.classList.replace('text-navy-900', 'text-white');
+                } else {
+                    btn.classList.remove('border-2', 'border-medis-600', 'bg-medis-50/70');
+                    btn.classList.add('border', 'border-slate-200', 'bg-white');
+                    badge.classList.replace('bg-navy-900', 'bg-slate-200');
+                    badge.classList.replace('text-white', 'text-navy-900');
+                }
+            });
+
+            const data = scenariosData[idx];
+            const out = document.getElementById('scenario-output');
+            out.className = `rounded-2xl border-2 p-5 sm:p-6 animate-fade-up ${data.borderClass}`;
+            out.innerHTML = `
+                <div class="flex flex-wrap items-start justify-between gap-3 pb-4 border-b border-slate-200/80">
+                    <div class="space-y-1 max-w-2xl">
+                        <h3 class="text-base sm:text-lg font-extrabold text-navy-900">${data.title}</h3>
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${data.context}</p>
+                    </div>
+                    <div class="shrink-0 flex items-center space-x-2 px-4 py-2 rounded-xl font-extrabold text-xs sm:text-sm shadow-sm ${data.badgeClass}">
+                        <i class="fa-solid ${data.icon.split(' ')[0]}"></i>
+                        <span>KEPUTUSAN: ${data.status}</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy-900 mb-2 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-scale-balanced text-medis-600"></i>
+                            <span>Dasar Hukum &amp; Etika</span>
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-700 leading-relaxed">
+                            ${data.dasarHukum.map(item => `<li class="flex items-start space-x-2"><i class="fa-solid fa-angle-right text-medis-600 mt-1 shrink-0"></i><span>${item}</span></li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy-900 mb-2 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-clipboard-check text-gold-600"></i>
+                            <span>Langkah SOP Administrator RS</span>
+                        </h4>
+                        <ol class="space-y-2 text-xs text-slate-700 leading-relaxed">
+                            ${data.sopSteps.map((step, sIdx) => `<li class="flex items-start space-x-2"><span class="font-extrabold text-gold-700 shrink-0">${sIdx + 1}.</span><span>${step}</span></li>`).join('')}
+                        </ol>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 7. LAB INTERAKTIF 2: KALKULATOR RETENSI 25 TAHUN
+        // ==========================================
+        function setTahunPreset(tahun) {
+            document.getElementById('retensi-tahun').value = tahun;
+            hitungRetensi();
+        }
+
+        function hitungRetensi() {
+            const currentYear = 2026;
+            const inputVal = parseInt(document.getElementById('retensi-tahun').value, 10);
+            const kategori = document.getElementById('retensi-kategori').value;
+            const hasilBox = document.getElementById('retensi-hasil-box');
+
+            if (isNaN(inputVal) || inputVal < 1950 || inputVal > currentYear) {
+                hasilBox.innerHTML = `
+                    <div class="text-xs sm:text-sm text-red-700 font-semibold">
+                        <i class="fa-solid fa-circle-exclamation mr-1.5"></i> Masukkan tahun kunjungan terakhir yang valid antara 1950 hingga ${currentYear}.
+                    </div>
+                `;
+                return;
+            }
+
+            const jatuhTempo = inputVal + 25;
+            const usiaBerkas = currentYear - inputVal;
+            const sisaTahun = jatuhTempo - currentYear;
+
+            let statusTitle = "";
+            let statusBadge = "";
+            let boxStyle = "";
+            let rekomendasiManajerial = "";
+
+            if (kategori === "medikolegal") {
+                statusTitle = "DITANGGUHKAN PEMUSNAHANNYA (STATUS MEDIKOLEGAL)";
+                statusBadge = "bg-red-600 text-white";
+                boxStyle = "border-red-400 bg-red-50/50";
+                rekomendasiManajerial = `Meskipun batas retensi standar 25 tahun jatuh pada tahun <strong>${jatuhTempo}</strong>, berkas kasus sengketa hukum/medikolegal <strong>wajib dipertahankan</strong> hingga seluruh proses peradilan berkekuatan hukum tetap (<em>inkracht</em>) dan masa kedaluwarsa tuntutan hukum berakhir.`;
+            } else if (sisaTahun <= 0) {
+                statusTitle = "MEMENUHI BATAS 25 TAHUN — SIAP PENILAIAN TIM PEMUSNAHAN";
+                statusBadge = "bg-gold-600 text-white";
+                boxStyle = "border-gold-500 bg-gold-50/50";
+                rekomendasiManajerial = `Berkas telah berusia <strong>${usiaBerkas} tahun</strong> (melampaui batas minimal 25 tahun pada tahun <strong>${jatuhTempo}</strong>). Berkas dapat dipilah oleh <strong>Tim Pemusnah Rekam Medis</strong> yang dibentuk Direktur RS: pisahkan 5 lembaran bernilai guna untuk dilestarikan abadi, buat Daftar Pertelaan Arsip, lalu lakukan pemusnahan dengan Berita Acara resmi.`;
+            } else {
+                statusTitle = "MASIH DALAM MASA RETENSI WAJIB (DILARANG DIMUSNAHKAN)";
+                statusBadge = "bg-medis-600 text-white";
+                boxStyle = "border-medis-600 bg-medis-50/40";
+                rekomendasiManajerial = `Berkas baru berusia <strong>${usiaBerkas} tahun</strong> dan masih memiliki sisa masa simpan wajib selama <strong>${sisaTahun} tahun lagi</strong> hingga tahun <strong>${jatuhTempo}</strong>. Fasyankes wajib menjaga keamanan, kerahasiaan, dan integritas data sesuai Pasal 39 Permenkes No. 24 Tahun 2022.`;
+            }
+
+            if (kategori === "kematian" && sisaTahun <= 0) {
+                rekomendasiManajerial += " <em>Catatan Khusus Kematian: Surat Keterangan Kematian dan Resume Medis akhir wajib dilestarikan permanen.</em>";
+            } else if (kategori === "khusus" && sisaTahun <= 0) {
+                rekomendasiManajerial += " <em>Catatan Pelayanan Khusus (Jiwa/Napza/Kusta/HIV): Tim penilai wajib memastikan tidak ada kebutuhan riwayat klinis berkelanjutan sebelum penghapusan.</em>";
+            }
+
+            hasilBox.className = `rounded-2xl p-5 border-2 ${boxStyle}`;
+            hasilBox.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span class="px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wider ${statusBadge}">
+                        ${statusTitle}
+                    </span>
+                    <span class="text-xs font-bold text-slate-500">Tahun Evaluasi: ${currentYear}</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 my-4 text-center">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200">
+                        <span class="text-[11px] text-slate-500 block">Kunjungan Terakhir</span>
+                        <strong class="text-lg font-extrabold text-navy-900">${inputVal}</strong>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-200">
+                        <span class="text-[11px] text-slate-500 block">Jatuh Tempo (25 Thn)</span>
+                        <strong class="text-lg font-extrabold text-medis-700">${jatuhTempo}</strong>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-200">
+                        <span class="text-[11px] text-slate-500 block">Usia / Sisa Simpan</span>
+                        <strong class="text-lg font-extrabold text-gold-700">${usiaBerkas} Thn / ${sisaTahun > 0 ? sisaTahun + ' Thn' : '0 Thn'}</strong>
+                    </div>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3.5 rounded-xl border border-slate-200">
+                    ${rekomendasiManajerial}
+                </p>
+            `;
+        }
+
+        // ==========================================
+        // 8. LAB INTERAKTIF 3: KUIS STUDI KASUS ETIKA & LEGALITAS
+        // ==========================================
+        const quizQuestions = [
+            {
+                q: "1. Seorang pejabat publik dirawat inap di RS dan mengalami komplikasi medis. Wartawan serta anggota keluarga jauh meminta salinan ringkasan medis pasien kepada Kepala Unit Rekam Medis. Sikap administrator rumah sakit yang paling tepat sesuai UU No. 17 Tahun 2023 adalah...",
+                options: [
+                    "Memberikan salinan resume medis kepada keluarga jauh karena memiliki hubungan kekerabatan",
+                    "Menolak permintaan tersebut karena isi rekam medis bersifat rahasia dan hanya dapat dibuka dengan persetujuan pasien atau ketentuan undang-undang",
+                    "Memberikan informasi secara lisan kepada wartawan demi transparansi publik rumah sakit",
+                    "Meminta persetujuan kepala ruangan perawat untuk menggantikan izin pasien"
+                ],
+                correct: 1,
+                rationale: "Berdasarkan Pasal 298–299 UU No. 17 Tahun 2023 tentang Kesehatan dan UU No. 27 Tahun 2022 PDP, isi rekam medis adalah milik pasien dan bersifat rahasia. Pihak ketiga (termasuk keluarga jauh maupun media) tidak berhak memperoleh informasi medis tanpa surat kuasa/persetujuan eksplisit pasien."
+            },
+            {
+                q: "2. Dalam audit keamanan Rekam Medis Elektronik (RME), ditemukan bahwa seorang dokter residen meminjamkan username dan password akun RME miliknya kepada perawat agar penginputan catatan perkembangan pasien (CPPT) lebih cepat. Pelanggaran prinsip utama Permenkes No. 24 Tahun 2022 yang terjadi adalah...",
+                options: [
+                    "Pelanggaran prinsip Confidentiality, Integrity, dan non-repudiation (tanggung gugat tanda tangan elektronik)",
+                    "Pelanggaran masa retensi minimal 25 tahun",
+                    "Pelanggaran hak kepemilikan fisik server rumah sakit",
+                    "Pelanggaran interoperabilitas kamus data ICD-10"
+                ],
+                correct: 0,
+                rationale: "Permenkes No. 24 Tahun 2022 mewajibkan keamanan RME berdasarkan prinsip Confidentiality, Integrity, dan Availability serta pengaturan hak akses personal. Password sharing merusak keaslian jejak audit (audit trail) dan keabsahan hukum tanda tangan elektronik."
+            },
+            {
+                q: "3. Menurut Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (Pasal 4 ayat 2 huruf a), data dan informasi kesehatan pasien diklasifikasikan sebagai...",
+                options: [
+                    "Data Pribadi yang Bersifat Umum",
+                    "Data Publik Terbuka untuk Penelitian",
+                    "Data Pribadi yang Bersifat Spesifik",
+                    "Data Administrasi Korporasi Rumah Sakit"
+                ],
+                correct: 2,
+                rationale: "Pasal 4 ayat (2) huruf a UU No. 27 Tahun 2022 secara eksplisit menetapkan data dan informasi kesehatan sebagai Data Pribadi yang Bersifat Spesifik karena pemrosesannya dapat mengakibatkan dampak lebih besar bagi subjek data (diskriminasi, kerugian finansial, dan stigma)."
+            },
+            {
+                q: "4. Seorang Dokter Penanggung Jawab Pelayanan (DPJP) menyadari bahwa terdapat kekeliruan penulisan dosis obat dan diagnosis sekunder pada catatan RME yang sudah tersimpan kemarin. Tata cara koreksi yang sah secara hukum dan etika rekam medis adalah...",
+                options: [
+                    "Meminta admin IT menghapus baris catatan lama dari database server agar tidak membingungkan",
+                    "Menimpa catatan lama dengan teks baru tanpa meninggalkan riwayat perubahan",
+                    "Membuat catatan tambahan (addendum) yang mencantumkan waktu koreksi, alasan perbaikan, dan identitas korektor tanpa menghapus catatan asli",
+                    "Membiarkan kesalahan tersebut karena RME yang sudah tersimpan tidak boleh dikoreksi sama sekali"
+                ],
+                correct: 2,
+                rationale: "Prinsip Integrity dalam Permenkes No. 24 Tahun 2022 dan standar akreditasi rumah sakit melarang penghapusan catatan medis yang telah dibuat. Koreksi wajib dilakukan melalui mekanisme addendum agar rekam jejak kronologis tetap utuh dan dapat diaudit."
+            },
+            {
+                q: "5. Berdasarkan Permenkes No. 24 Tahun 2022, berapa lama batas waktu penyimpanan (retensi) minimal data Rekam Medis Elektronik di fasilitas pelayanan kesehatan sebelum dapat dilakukan penilaian untuk pemusnahan?",
+                options: [
+                    "Minimal 5 tahun sejak pasien pulang rawat inap",
+                    "Minimal 10 tahun sejak tanggal pendaftaran pertama",
+                    "Minimal 15 tahun sejak klaim JKN dibayarkan",
+                    "Minimal 25 tahun sejak tanggal kunjungan terakhir pasien"
+                ],
+                correct: 3,
+                rationale: "Pasal 39 Permenkes No. 24 Tahun 2022 menegaskan bahwa penyimpanan data Rekam Medis Elektronik di Fasyankes dilakukan paling singkat 25 (dua puluh lima) tahun sejak tanggal kunjungan terakhir pasien."
+            }
+        ];
+
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((item, qIdx) => {
+                const answered = userAnswers[qIdx] !== null;
+                const isCorrect = userAnswers[qIdx] === item.correct;
+
+                return `
+                    <div class="p-5 rounded-2xl border ${answered ? (isCorrect ? 'border-medis-500 bg-medis-50/30' : 'border-red-400 bg-red-50/30') : 'border-slate-200 bg-slate-50/60'}">
+                        <p class="font-bold text-navy-900 text-sm sm:text-base leading-relaxed mb-3.5">${item.q}</p>
+                        <div class="space-y-2">
+                            ${item.options.map((opt, oIdx) => {
+                                let btnClass = "bg-white border-slate-200 text-slate-700 hover:border-medis-500";
+                                let iconHtml = `<span class="w-6 h-6 rounded-full border border-slate-300 text-xs font-bold flex items-center justify-center shrink-0">${String.fromCharCode(65 + oIdx)}</span>`;
+
+                                if (answered) {
+                                    if (oIdx === item.correct) {
+                                        btnClass = "bg-medis-600 border-medis-600 text-white font-semibold";
+                                        iconHtml = `<i class="fa-solid fa-circle-check text-white text-base shrink-0"></i>`;
+                                    } else if (oIdx === userAnswers[qIdx]) {
+                                        btnClass = "bg-red-600 border-red-600 text-white font-semibold";
+                                        iconHtml = `<i class="fa-solid fa-circle-xmark text-white text-base shrink-0"></i>`;
+                                    } else {
+                                        btnClass = "bg-white/60 border-slate-200 text-slate-400 opacity-75";
+                                    }
+                                }
+
+                                return `
+                                    <button 
+                                        type="button" 
+                                        onclick="answerQuiz(${qIdx}, ${oIdx})"
+                                        ${answered ? 'disabled' : ''}
+                                        class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm transition flex items-center space-x-3 ${btnClass}"
+                                    >
+                                        ${iconHtml}
+                                        <span>${opt}</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        ${answered ? `
+                            <div class="mt-3.5 p-3.5 rounded-xl bg-white border ${isCorrect ? 'border-medis-200 text-medis-900' : 'border-red-200 text-red-900'} text-xs leading-relaxed animate-fade-up">
+                                <strong>${isCorrect ? 'Tepat Sekali!' : 'Kurang Tepat.'} Pembahasan Hukum &amp; Etika:</strong> ${item.rationale}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            updateQuizScore();
+        }
+
+        function answerQuiz(qIdx, oIdx) {
+            if (userAnswers[qIdx] !== null) return;
+            userAnswers[qIdx] = oIdx;
+            renderQuiz();
+        }
+
+        function updateQuizScore() {
+            const total = quizQuestions.length;
+            const correctCount = userAnswers.reduce((acc, ans, idx) => ans === quizQuestions[idx].correct ? acc + 1 : acc, 0);
+            const answeredCount = userAnswers.filter(ans => ans !== null).length;
+            const pct = Math.round((correctCount / total) * 100);
+
+            document.getElementById('quiz-score-display').textContent = `${correctCount} / ${total} (${pct}%)`;
+
+            const summaryBanner = document.getElementById('quiz-summary-banner');
+            if (answeredCount === total) {
+                summaryBanner.classList.remove('hidden');
+                let predikat = pct >= 80 ? "Sangat Kompeten (Unggul)" : (pct >= 60 ? "Kompeten (Baik)" : "Perlu Pendalaman Materi");
+                summaryBanner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-gold-400">Hasil Akhir Evaluasi Studi Kasus</span>
+                            <h3 class="text-lg sm:text-xl font-extrabold mt-0.5">Skor Akhir: ${correctCount} dari ${total} Soal (${pct}%) — ${predikat}</h3>
+                            <p class="text-xs text-slate-300 mt-1">Terima kasih telah menyelesaikan simulasi kuis Legalitas &amp; Etika Rekam Medis Kelompok 4 S1 ARS.</p>
+                        </div>
+                        <button onclick="resetQuiz()" class="shrink-0 px-4 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-navy-950 font-extrabold text-xs transition">
+                            Coba Ulangi Kuis
+                        </button>
+                    </div>
+                `;
+            } else {
+                summaryBanner.classList.add('hidden');
+            }
+        }
+
+        function resetQuiz() {
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            renderQuiz();
+            showToast('Kuis studi kasus telah direset');
+        }
+
+        // ==========================================
+        // 9. COPY CITATIONS HELPER (DOCUMENT.EXECCOMMAND)
+        // ==========================================
+        function copyAllReferences() {
+            const refs = [
+                "1. Republik Indonesia. (2023). Undang-Undang Nomor 17 Tahun 2023 tentang Kesehatan (Pasal 296-300). https://peraturan.bpk.go.id",
+                "2. Kementerian Kesehatan RI. (2022). Peraturan Menteri Kesehatan Nomor 24 Tahun 2022 tentang Rekam Medis. https://jdih.kemkes.go.id",
+                "3. Republik Indonesia. (2022). Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (Pasal 4 Ayat 2 Huruf a). https://peraturan.bpk.go.id",
+                "4. Republik Indonesia. (2024). Peraturan Pemerintah Nomor 28 Tahun 2024 tentang Peraturan Pelaksanaan UU No. 17 Tahun 2023 & UU No. 1 Tahun 2023 (KUHP) Pasal 443. https://peraturan.go.id",
+                "5. Kementerian Kesehatan RI. (2024). Platform SATUSEHAT: Standar Interoperabilitas Rekam Medis Elektronik Nasional. https://satusehat.kemkes.go.id",
+                "6. PORMIKI & Kepmenkes No. HK.01.07/MENKES/312/2020 tentang Standar Profesi Perekam Medis dan Informasi Kesehatan. https://pormiki.or.id",
+                "7. Ikatan Dokter Indonesia (IDI). (2012). Kode Etik Kedokteran Indonesia (KODEKI) Pasal 16. https://www.idionline.org",
+                "8. World Medical Association (WMA). (2017). WMA Declaration of Geneva. https://www.wma.net/policies-post/wma-declaration-of-geneva/"
+            ].join("\n");
+
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = refs;
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.opacity = '0';
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Daftar pustaka & tautan resmi berhasil disalin ke clipboard');
+            } catch (err) {
+                showToast('Gagal menyalin daftar pustaka', true);
+            }
+            document.body.removeChild(tempTextarea);
+        }
+
+        // ==========================================
+        // 10. INITIALIZE ON WINDOW LOAD
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            selectScenario(0);
+            hitungRetensi();
+            renderQuiz();
+        });
+    </script>
+</body>
+</html>
